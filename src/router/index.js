@@ -78,6 +78,28 @@ export const constantRoutes = [
   },
 
   {
+    path: '/dataset',
+    component: Layout,
+    redirect: '/dataset/index',
+    name: 'Example',
+    meta: { title: '数据集', icon: 'example' },
+    children: [
+      {
+        path: 'index',
+        name: 'dataset',
+        component: () => import('@/views/dataset/index'),
+        meta: { title: '数据集列表', icon: 'table' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '新建数据集', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
     path: '/users',
     component: Layout,
     redirect: '/users/index',
@@ -133,6 +155,20 @@ export const constantRoutes = [
         name: 'addproduct',
         component: () => import('@/views/addproduct/index'),
         meta: { title: '添加商品', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/adddataset',
+    hidden: true,
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'adddataset',
+        component: () => import('@/views/adddataset/index'),
+        meta: { title: '添加数据集', icon: 'form' }
       }
     ]
   },

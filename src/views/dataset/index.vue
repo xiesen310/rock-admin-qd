@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div align="right">
-      <el-button type="success" @click="adduser">添加用户</el-button>
+      <el-button type="success" @click="addDataSet">新建数据集</el-button>
     </div>
 
     <el-table
@@ -17,26 +17,36 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="用户ID">
+      <el-table-column label="数据集ID">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
 
-      <el-table-column label="用户名">
+      <el-table-column label="数据集名称">
         <template slot-scope="scope">
-          {{ scope.row.username }}
+          {{ scope.row.datasetName }}
         </template>
       </el-table-column>
 
-      <el-table-column label="年龄">
+      <el-table-column label="主题">
         <template slot-scope="scope">
-          {{ scope.row.age }}
+          {{ scope.row.topic }}
         </template>
       </el-table-column>
-      <el-table-column label="邮箱">
+      <el-table-column label="分区数">
         <template slot-scope="scope">
-          {{ scope.row.email }}
+          {{ scope.row.partitionNum }}
+        </template>
+      </el-table-column>
+      <el-table-column label="副本数">
+        <template slot-scope="scope">
+          {{ scope.row.replicationNum }}
+        </template>
+      </el-table-column>
+      <el-table-column label="约束">
+        <template slot-scope="scope">
+          {{ scope.row.jsonSchema }}
         </template>
       </el-table-column>
       <el-table-column label="创建时间">
@@ -44,13 +54,19 @@
           {{ scope.row.createTime }}
         </template>
       </el-table-column>
-
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="描述">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="editUser(scope.row.id)">
+          {{ scope.row.remark }}
+        </template>
+      </el-table-column>
+
+
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="editProduct(scope.row.id)">
             编辑
           </el-button>
-          <el-button size="mini" type="danger" @click="delUser(scope.row.id)">
+          <el-button size="mini" type="danger" @click="delProduct(scope.row.id)">
             删除
           </el-button>
         </template>
@@ -65,7 +81,6 @@
 
 <script>
   import Pagination from '@/components/Pagination'
-  import { getList } from '../../api/table'
 
   export default {
     components: { Pagination },
@@ -90,53 +105,50 @@
       }
     },
     created() {
+      // this.fetchData()
       this.getList()
     },
     methods: {
-      fetchData() {
-        var vm = this
-        this.axios({
-          method: 'get',
-          url: 'http://localhost:8090/user'
-        }).then(function(resp) {
-          vm.list = resp.data
-        })
-      },
       getList() {
         // 得到一个 pageInfo 对象
         var vm = this
         this.axios({
           method: 'get',
-          url: 'http://localhost:8090/user?pageNum=' + vm.listQuery.page + '&pageSize=' + vm.listQuery.limit
+          url: 'http://localhost:8090/dataset?pageNum=' + vm.listQuery.page + '&pageSize=' + vm.listQuery.limit
         }).then(function(resp) {
+          console.log(resp)
           vm.total = resp.data.data.total
           vm.list = resp.data.data.list
         })
-
       },
 
-      adduser() {
-        this.$router.push('/adduser/index')
-      },
-
-      editUser(id) {
-        console.log(id)
-        this.$router.push('/edituser/index/' + id)
-      },
-
-      delUser(id) {
+      fetchData() {
         var vm = this
         this.axios({
           method: 'get',
-          url: 'http://localhost:8090/user/delete/' + id
+          url: 'http://localhost:8090/product/list'
         }).then(function(resp) {
-          console.log(resp)
-          if (resp.data.code == 0) {
+          vm.list = resp.data
+        })
+      },
+      addDataSet() {
+        this.$router.push('/adddataset/index')
+      },
+      editProduct(id) {
+        // this.$router.push('/editproduct/index/' + id)
+      },
+      delProduct(id) {
+        var vm = this
+        this.axios({
+          method: 'get',
+          url: 'http://localhost:8090/product/delete/' + id
+        }).then(function(resp) {
+          if (resp.data == 'success') {
             vm.$message({
               message: '删除成功',
               type: 'success'
             })
-            vm.getList()
+            vm.fetchData()
           }
         }).catch(function(error) {
           vm.$message.error('删除失败')

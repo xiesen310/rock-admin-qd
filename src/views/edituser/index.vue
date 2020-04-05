@@ -1,7 +1,5 @@
 <template>
   <div class="app-container">
-    {{$route.params.id}}
-
     <el-form ref="form" :model="user" label-width="120px">
       <el-form-item label="用户名称">
         <el-input v-model="user.username"/>
