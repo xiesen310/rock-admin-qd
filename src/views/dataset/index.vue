@@ -66,7 +66,7 @@
           <el-button type="primary" size="mini" @click="editProduct(scope.row.id)">
             编辑
           </el-button>
-          <el-button size="mini" type="danger" @click="delProduct(scope.row.id)">
+          <el-button size="mini" type="danger" @click="delDataset(scope.row.id)">
             删除
           </el-button>
         </template>
@@ -126,7 +126,7 @@
         var vm = this
         this.axios({
           method: 'get',
-          url: 'http://localhost:8090/product/list'
+          url: 'http://localhost:8090/dataset/list'
         }).then(function(resp) {
           vm.list = resp.data
         })
@@ -135,20 +135,22 @@
         this.$router.push('/adddataset/index')
       },
       editProduct(id) {
-        // this.$router.push('/editproduct/index/' + id)
+        this.$router.push('/editdataset/index/' + id)
       },
-      delProduct(id) {
+      delDataset(id) {
         var vm = this
         this.axios({
           method: 'get',
-          url: 'http://localhost:8090/product/delete/' + id
+          url: 'http://localhost:8090/dataset/delete/' + id
         }).then(function(resp) {
-          if (resp.data == 'success') {
+          console.log(resp)
+          if (resp.data.code == 0) {
             vm.$message({
               message: '删除成功',
               type: 'success'
             })
-            vm.fetchData()
+            // vm.fetchData()
+            vm.getList()
           }
         }).catch(function(error) {
           vm.$message.error('删除失败')

@@ -146,6 +146,20 @@ export const constantRoutes = [
   },
 
   {
+    path: '/editdataset',
+    hidden: true,
+    component: Layout,
+    children: [
+      {
+        path: 'index/:id',
+        name: 'editdataset',
+        component: () => import('@/views/editdataset/index'),
+        meta: { title: '编辑数据集', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/addproduct',
     hidden: true,
     component: Layout,
